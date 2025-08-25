@@ -17,7 +17,7 @@ const PromoBar = () => {
       <ul className="list-unstyled list-inline">
         <li className="list-inline-item mx-3">
           <a className="text-decoration-none fs-xs p-0" href="#!">
-            <i className="bi bi-heart"></i> Lista de deseos
+            <i className="bi bi-heart"></i> Favoritos
           </a>
         </li>
         <li className="list-inline-item">

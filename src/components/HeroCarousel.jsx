@@ -137,7 +137,7 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
             >
               {items.map((it, i) => (
                 <SwiperSlide key={`main-${i}`}>
-                  <div className="ratio ratio-16x9">
+                  <div className="rounded-circle ratio ratio-16x9">
                     <img src={it.image} alt={it.title} className="w-100 h-100 object-fit-contain" />
                   </div>
                 </SwiperSlide>

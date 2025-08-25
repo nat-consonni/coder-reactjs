@@ -35,3 +35,8 @@ a{
     font-size:$fs-sm;
     color:$color-muted;
 }
+
+a.text-color-primary,
+.text-color-primary{
+    color: $color-text;
+}
