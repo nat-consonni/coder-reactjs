@@ -18,7 +18,7 @@ const Item = ({ product }) => {
       </a>
       <div className='footer mt-3 d-flex align-items-center gap-2'>
         <Link to={`/item/${id}`} className="btn btn-dark rounded-pill flex-grow-1">Agregar al carrito</Link>
-        <Link to={`/item/${id}`} className="btn btn-secondary rounded-circle p-2 d-inline-flex align-items-center justify-content-center flex-shrink-0 btn-agregar-a-favoritos" aria-label="Agregar a favoritos"><i class="bi bi-heart"></i></Link>
+        <Link to={`/item/${id}`} className="btn btn-secondary rounded-circle p-2 d-inline-flex align-items-center justify-content-center flex-shrink-0 btn-agregar-a-favoritos" aria-label="Agregar a favoritos"><i className="bi bi-heart"></i></Link>
       </div>
     </div>
   );

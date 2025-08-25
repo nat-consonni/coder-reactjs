@@ -56,7 +56,7 @@ const NavBar = () => {
                 >
                   Comprar
                 </button>
-                <div className="dropdown-menu p-4" aria-labelledby="comprarDropdown">
+                <div className="dropdown-menu p-3 rounded-1" aria-labelledby="comprarDropdown">
                   <div className="d-flex flex-column flex-lg-row gap-4">
                     <ul className="nav flex-column gap-2 mt-0"> 
                       <li>

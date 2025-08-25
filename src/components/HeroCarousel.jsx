@@ -1,3 +1,4 @@
+//este lo hice con ayuda de ChatGPT
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Navigation, Controller } from 'swiper/modules';
@@ -19,7 +20,7 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
   const [nextSwiper, setNextSwiper] = useState(null);
   const [capSwiper,  setCapSwiper]  = useState(null);
 
-  // 👉 Solo destacados (soporta true / 'true' / 'ture')
+  //solo destacados
   const isFeatured = (v) => v === true || v === 'true' || v === 'ture';
 
   const items = useMemo(() => {
@@ -28,7 +29,7 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
     let base = categoryId ? src.filter(p => p.category === categoryId) : src;
     let filtered = featuredOnly ? base.filter(p => isFeatured(p.destacado)) : base;
 
-    // fallback: si no hay destacados, mostramos base para no romper el carrusel
+    // si no hay destacados, muestro base para no romper el carrusel
     if (featuredOnly && filtered.length === 0) filtered = base;
 
     return filtered.slice(0, limit).map(p => ({

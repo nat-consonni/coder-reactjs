@@ -1,4 +1,5 @@
 import ItemCount from './ItemCount';
+
 export default function ItemDetail({ product }) {
   const { title, price, img, stock } = product;
   const handleAdd = (qty) => console.log(`Agregado ${qty} de ${title}`);

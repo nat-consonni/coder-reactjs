@@ -1,0 +1,13 @@
+@import './tokens';
+@import './mixins';
+
+.dropdown-menu{
+    .nav-link{
+        color: $action-blue-600;
+        font-size: 0.9rem;
+        &:hover:not(.active){
+            color: $action-blue-700;
+            background-color: $action-blue-50;
+        }
+    }
+}

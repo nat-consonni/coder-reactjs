@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Breadcrumbs from './Breadcrumbs';
 import { getProducts } from '../services/productsApi';
 import ItemList from './ItemList';
 
-const ItemListContainer = ({ greeting = 'Nuestros Productos' }) => {
+const ItemListContainer = ({ greeting = 'Nuestro catálogo' }) => {
   const { categoryId } = useParams();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,16 +14,17 @@ const ItemListContainer = ({ greeting = 'Nuestros Productos' }) => {
     getProducts(categoryId)
       .then(setItems)
       .finally(() => setLoading(false));
-  }, [categoryId]); // 👈 parámetro de la URL en deps
+  }, [categoryId]); // URL en deps
 
   return (
-    <div className="container py-5">
-      <h2 className="text-center mb-4">
-        {greeting}{categoryId ? ` · ${categoryId}` : ''}
-      </h2>
+    <div className="item-list-container container py-5">
+      <Breadcrumbs />
+      <h3 className="text-left mb-4">
+        {greeting}<span className='text-capitalize'>{categoryId ? `: ${categoryId}` : ''} <i>({items.length})</i></span>
+      </h3>
 
       {loading ? (
-        <p className="text-center">Cargando…</p>
+        <p className="text-center">Cargando productos…</p>
       ) : (
         <ItemList items={items} />
       )}

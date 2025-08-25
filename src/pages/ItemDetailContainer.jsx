@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProductById } from '../services/productsApi';
+import Breadcrumbs from '../components/Breadcrumbs';
 import ItemDetail from '../components/ItemDetail';
 
 export default function ItemDetailContainer() {
@@ -9,11 +10,22 @@ export default function ItemDetailContainer() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let alive = true;
     setLoading(true);
-    getProductById(itemId).then(setProduct).finally(() => setLoading(false));
+    getProductById(itemId)
+      .then((p) => { if (alive) setProduct(p); })
+      .finally(() => { if (alive) setLoading(false); });
+    return () => { alive = false; };
   }, [itemId]);
 
-  if (loading) return <p style={{padding:16}}>Cargando…</p>;
-  if (!product) return <p style={{padding:16}}>Producto no encontrado.</p>;
-  return <ItemDetail product={product} />;
+  return (
+    <div className="container py-4">
+      {/* Breadcrumbs funcionales */}
+      <Breadcrumbs />
+
+      {loading && <p>Cargando…</p>}
+      {!loading && !product && <p>Producto no encontrado.</p>}
+      {!loading && product && <ItemDetail product={product} />}
+    </div>
+  );
 }

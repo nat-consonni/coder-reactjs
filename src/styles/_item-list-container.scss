@@ -1,0 +1,13 @@
+@import './tokens';
+@import './mixins';
+
+.item-list-container{
+    span{
+        i{
+            font-size: 0.9rem;
+            font-style: normal;
+            font-weight: 200;
+            display: inline-block;
+        }
+    }
+}
