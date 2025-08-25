@@ -1,0 +1,13 @@
+@import './tokens';
+
+@mixin focus-ring { outline: none; box-shadow: $focus-ring; }
+
+@mixin btn-base {
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  padding:.75rem 1.25rem; border-radius:$radius-pill;
+  font-family:$font-ui; font-weight:600; line-height:1;
+  border:1px solid transparent; cursor:pointer;
+  transition: .15s ease background-color, .15s ease color, .15s ease border-color, .15s ease box-shadow;
+  &:focus-visible { @include focus-ring; }
+  &:disabled { opacity:.5; cursor:not-allowed; }
+}

@@ -1,29 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { getProducts } from '../services/productsApi';
+import ItemList from './ItemList';
 
-const ItemListContainer = ({ items }) => {
+const ItemListContainer = ({ greeting = 'Nuestros Productos' }) => {
+  const { categoryId } = useParams();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getProducts(categoryId)
+      .then(setItems)
+      .finally(() => setLoading(false));
+  }, [categoryId]); // 👈 parámetro de la URL en deps
+
   return (
     <div className="container py-5">
-      <h2 className="text-center mb-4">Nuestros Productos</h2>
+      <h2 className="text-center mb-4">
+        {greeting}{categoryId ? ` · ${categoryId}` : ''}
+      </h2>
 
-      <div className="row">
-        {items.length === 0 ? (
-          <p className="text-center">No hay productos disponibles.</p>
-        ) : (
-          items.map((item, index) => (
-            <div key={index} className="col-md-4 mb-4">
-              <div className="card">
-                <img src={item.image} className="card-img-top" alt={item.name} />
-                <div className="card-body">
-                  <h5 className="card-title">{item.name}</h5>
-                  <p className="card-text">{item.description}</p>
-                  <p className="h6">${item.price}</p>
-                  <a href="#" className="btn btn-dark">Agregar al carrito</a>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+      {loading ? (
+        <p className="text-center">Cargando…</p>
+      ) : (
+        <ItemList items={items} />
+      )}
     </div>
   );
 };

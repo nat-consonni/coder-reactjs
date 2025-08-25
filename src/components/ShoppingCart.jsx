@@ -2,7 +2,7 @@ import React from 'react';
 
 const ShoppingCart = () => {
   return (
-    <div className="offcanvas offcanvas-end pb-sm-2 px-sm-2" id="shoppingCart" tabindex="-1" aria-labelledby="shoppingCartLabel" style={{ width: '500px' }}>
+    <div className="offcanvas offcanvas-end pb-sm-2 px-sm-2" id="shoppingCart" tabIndex="-1" aria-labelledby="shoppingCartLabel" style={{ width: '500px' }}>
       <div className="offcanvas-header py-3 pt-lg-4">
         <h4 className="offcanvas-title" id="shoppingCartLabel">Tu carrito</h4>
         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>

@@ -1,0 +1,24 @@
+@import './tokens';
+@import './mixins';
+
+.btn-primary{
+    background-color: $action-blue-600;
+    border-color: $action-blue-600;
+    &:hover{
+        background-color:$action-blue-700;
+        border-color:$action-blue-700;
+    }
+}
+
+.btn-secondary{
+    background-color: #eef1f6;
+    border-color: #eef1f6;
+    color: #333d4c;
+}
+
+.btn-outline-secondary{
+    &:hover{
+        background-color: #FFF !important;
+        color: #6c757d;
+    }
+}

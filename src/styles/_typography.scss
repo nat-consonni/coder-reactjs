@@ -1,0 +1,37 @@
+@import './tokens';
+@import './mixins';
+
+body {
+    font-family:$font-ui;
+    font-size:$fs-md;
+    color:$color-text;
+    background:$color-bg;
+}
+h1, .h1 {
+    font-family:$font-brand;
+    font-size:$fs-3xl;
+    line-height:1.2;
+}
+h2, .h2 {
+    font-family:$font-brand;
+    font-size:$fs-2xl; line-height:1.2;
+}
+
+h3, .h3 {
+    font-family:$font-brand;
+    font-size:$fs-xl; 
+    line-height:1.2;
+}
+
+a{
+    color: $action-blue-700;
+    &:hover{
+        color: $action-blue-700;
+    }
+}
+
+// Classes
+.small {
+    font-size:$fs-sm;
+    color:$color-muted;
+}

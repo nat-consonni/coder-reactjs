@@ -1,0 +1,19 @@
+@import './tokens';
+@import './mixins';
+
+.button-cart{
+    position: relative;
+    .cart-products-counter{
+        position: absolute;
+        font-size: 0.5rem;
+        top: 4px;
+        right: 3px;
+        background-color: $color-primary;
+        color: #fff;
+        border-radius: 1000px;
+        width: 0.8rem;
+        height: 0.8rem;
+        line-height: 0.8rem;
+        font-weight: bold;
+    }    
+}

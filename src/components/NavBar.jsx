@@ -1,11 +1,11 @@
-// src/components/NavBar.js
 import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import ShoppingCart from './ShoppingCart';
 
 const NavBar = () => {
   return (
     <header className="navbar-sticky sticky-top container z-fixed px-2" data-sticky-element="">
-      <div className="navbar navbar-expand-lg flex-nowrap bg-body rounded-pill shadow ps-0 mx-1">
+      <div className="navbar navbar-expand-lg flex-nowrap bg-body rounded-pill shadow px-3 mx-1">
         <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark rounded-pill z-0 d-none d-block-dark"></div>
 
         {/* Menu mobile (hamburguesa) */}
@@ -21,12 +21,17 @@ const NavBar = () => {
         </button>
 
         {/* Navbar brand (logo) */}
-        <a className="navbar-brand position-relative z-1 ms-4 ms-sm-5 ms-lg-4 me-2 me-sm-0 me-lg-3" href="/">
+        <Link className="navbar-brand position-relative z-1 ms-4 ms-sm-5 ms-lg-4 me-2 me-sm-0 me-lg-3" to="/">
           Divino
-        </a>
+        </Link>
 
         {/* Navegación principal */}
-        <nav className="offcanvas offcanvas-start" id="navbarNav" tabindex="-1" aria-labelledby="navbarNavLabel">
+        <nav
+          className="offcanvas offcanvas-start"
+          id="navbarNav"
+          tabIndex={-1}
+          aria-labelledby="navbarNavLabel"
+        >
           <div className="offcanvas-header py-3">
             <h5 className="offcanvas-title" id="navbarNavLabel">
               ¿Qué estás buscando?
@@ -35,51 +40,51 @@ const NavBar = () => {
           </div>
           <div className="offcanvas-body pt-3 pb-4 py-lg-0 mx-lg-auto">
             <ul className="navbar-nav position-relative">
-              <li className="nav-item me-lg-n1 me-xl-0">
-                <a className="nav-link fs-sm active" aria-current="page" href="#">
+              <li className="nav-item me-lg-n1 px-2">
+                <NavLink className="nav-link fs-sm" to="/" end>
                   Inicio
-                </a>
+                </NavLink>
               </li>
-              <li className="nav-item dropdown position-static me-lg-n1 me-xl-0">
-                <a
-                  className="nav-link dropdown-toggle fs-sm"
-                  href="#"
-                  role="button"
+              <li className="nav-item dropdown position-static me-lg-n1 px-2">
+                <button
+                  className="nav-link dropdown-toggle fs-sm btn btn-link p-0 h-100"
+                  type="button"
+                  id="comprarDropdown"
                   data-bs-toggle="dropdown"
                   data-bs-trigger="hover"
                   aria-expanded="false"
                 >
                   Comprar
-                </a>
-                <div className="dropdown-menu p-4">
+                </button>
+                <div className="dropdown-menu p-4" aria-labelledby="comprarDropdown">
                   <div className="d-flex flex-column flex-lg-row gap-4">
                     <ul className="nav flex-column gap-2 mt-0"> 
                       <li>
-                        <a className="nav-link d-inline fw-normal text-truncate p-0" href="#">Colchones y sommiers</a>
+                        <NavLink className="nav-link d-inline fw-normal text-truncate p-0" to="/category/colchones">Colchones y sommiers</NavLink>
                       </li>
                       <li>
-                        <a className="nav-link d-inline fw-normal text-truncate p-0" href="#">Living</a>
+                        <NavLink className="nav-link d-inline fw-normal text-truncate p-0" to="/category/living">Living</NavLink>
                       </li>
                       <li>
-                        <a className="nav-link d-inline fw-normal text-truncate p-0" href="#">Textiles del hogar</a>
+                        <NavLink className="nav-link d-inline fw-normal text-truncate p-0" to="/category/textiles">Textiles del hogar</NavLink>
                       </li>
                       <li>
-                        <a className="nav-link d-inline fw-normal text-truncate p-0" href="#">Oficina</a>
+                        <NavLink className="nav-link d-inline fw-normal text-truncate p-0" to="/category/oficina">Oficina</NavLink>
                       </li>
                       <li>
-                        <a className="nav-link d-inline fw-normal text-truncate p-0" href="#">Comedor</a>
+                        <NavLink className="nav-link d-inline fw-normal text-truncate p-0" to="/category/comedor">Comedor</NavLink>
                       </li>
                       <li>
-                        <a className="nav-link d-inline fw-normal text-truncate p-0" href="#">Cocinas</a>
+                        <NavLink className="nav-link d-inline fw-normal text-truncate p-0" to="/category/cocinas">Cocinas</NavLink>
                       </li>
                     </ul>
                   </div>
                 </div>
               </li>
-              <li className="nav-item me-lg-n1 me-xl-0">
-                <a className="nav-link fs-sm active" aria-current="page" href="#">
+              <li className="nav-item me-lg-n1 px-2">
+                <NavLink className="nav-link fs-sm" to="/discontinuados">
                   Discontinuados
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>
@@ -90,7 +95,7 @@ const NavBar = () => {
           {/* Carrito */}
           <button
             type="button"
-            className="btn btn-icon fs-lg btn-outline-secondary border-0 rounded-circle animate-scale me-2"
+            className="btn btn-icon fs-lg btn-outline-secondary border-0 rounded-circle me-2 button-cart"
             data-bs-toggle="offcanvas"
             data-bs-target="#shoppingCart"
             aria-controls="shoppingCart"
@@ -104,7 +109,7 @@ const NavBar = () => {
           <div className="dropdown">
             <button
               type="button"
-              className="btn btn-icon fs-lg btn-secondary rounded-circle animate-scale"
+              className="btn btn-icon fs-lg btn-secondary rounded-circle button-cart"
               data-bs-toggle="dropdown"
               data-bs-auto-close="outside"
               aria-label="Toggle search bar"
