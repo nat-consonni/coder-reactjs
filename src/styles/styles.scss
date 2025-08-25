@@ -1,6 +1,7 @@
 @use './tokens';
 @use './mixins';
 @use './typography';
+@use './utilities';
 
 //UI elements
 @use './buttons';
@@ -12,6 +13,8 @@
 @use './item';
 @use './dropdowns';
 @use './item-list-container';
+@use './item-count';
+@use './category-band';
 
 
 

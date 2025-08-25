@@ -1,0 +1,7 @@
+.category-card .bg-body-tertiary {
+    transition: transform .2s ease;
+}
+
+.category-card a:hover .bg-body-tertiary {
+    transform: translateY(-3px);
+}

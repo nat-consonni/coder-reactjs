@@ -8,6 +8,7 @@ import ItemListContainer from './components/ItemListContainer';
 import ItemDetailContainer from './pages/ItemDetailContainer';
 import Discontinuados from './pages/Discontinuados';
 import NotFound from './pages/NotFound';
+import CategoryBand from './components/CategoryBand';
 import Footer from './components/Footer';
 
 function App() {
@@ -40,7 +41,7 @@ function App() {
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-      
+      <CategoryBand />
       <Footer />
     </BrowserRouter>
   );

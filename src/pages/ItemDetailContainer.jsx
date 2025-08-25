@@ -19,10 +19,9 @@ export default function ItemDetailContainer() {
   }, [itemId]);
 
   return (
-    <div className="container py-4">
+    <div className="item-detail-container container py-4">
       {/* Breadcrumbs funcionales */}
       <Breadcrumbs />
-
       {loading && <p>Cargando…</p>}
       {!loading && !product && <p>Producto no encontrado.</p>}
       {!loading && product && <ItemDetail product={product} />}

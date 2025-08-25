@@ -1,0 +1,9 @@
+@import './tokens';
+@import './mixins';
+
+.stepper{
+    span{
+        width: 50px;
+        text-align: center;
+    }
+}
