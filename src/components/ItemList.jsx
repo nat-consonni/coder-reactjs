@@ -21,7 +21,8 @@ export default function ItemList({ items = [] }) {
 
             <div className="card-body d-flex flex-column">
               <h6 className="card-title mb-1 text-truncate">{item.title}</h6>
-              <p className="card-text text-muted small mb-2 text-truncate">
+              <p className='h3'>$ {item.price}</p>
+              <p className="card-text text-muted small mb-3 text-truncate">
                 {item.description}
               </p>
 
