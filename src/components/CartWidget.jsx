@@ -1,26 +1,26 @@
-// src/components/NavBar.jsx
-import { Link, NavLink } from 'react-router-dom';
-import CartWidget from './CartWidget';
+import { useCart } from '../context/CartContext';
 
-const categories = [
-  { id: 'sillones', label: 'Sillones' },
-  { id: 'mesas',    label: 'Mesas' },
-  { id: 'sillas',   label: 'Sillas' },
-  { id: 'colchones',label: 'Colchones' },
-];
+export default function CartWidget({ className = '' }) {
+  const { calcItemsQty } = useCart();
+  const qty = calcItemsQty();
 
-export default function NavBar() {
   return (
-    <header className="navbar">
-      <Link to="/" className="logo">Divino Uruguay</Link>
-      <nav className="menu">
-        {categories.map(c => (
-          <NavLink key={c.id} to={`/category/${c.id}`} className="link">
-            {c.label}
-          </NavLink>
-        ))}
-      </nav>
-      <CartWidget />
-    </header>
+    <button
+      type="button"
+      className={`btn btn-icon fs-lg btn-outline-secondary border-0 rounded-circle me-2 button-cart ${className}`}
+      data-bs-toggle="offcanvas"
+      data-bs-target="#shoppingCart"
+      aria-controls="shoppingCart"
+      aria-label="Tu carrito de compras"
+    >
+      <i className="bi bi-cart"></i>
+      {qty > 0 && (
+        <span
+          className="cart-products-counter"
+        >
+          {qty}
+        </span>
+      )}
+    </button>
   );
 }

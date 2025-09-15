@@ -1,7 +1,6 @@
-// src/components/Breadcrumbs.jsx
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
-import { PRODUCTS } from '../data/products';
+import { getProductById } from '../services/productsApi'; // 👈 ahora leemos de Firestore
 
 const CATEGORY_LABELS = {
   colchones: 'Colchones y sommiers',
@@ -26,7 +25,23 @@ export default function Breadcrumbs() {
   const isItem = pathname.startsWith('/item/');
   const isDiscontinued = pathname.startsWith('/discontinuados');
 
-  // useMemo
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Si estamos en /item/:itemId, traemos el producto desde Firestore
+  useEffect(() => {
+    let mounted = true;
+    if (isItem && itemId) {
+      setLoading(true);
+      getProductById(itemId)
+        .then((p) => { if (mounted) setProduct(p || null); })
+        .finally(() => { if (mounted) setLoading(false); });
+    } else {
+      setProduct(null);
+    }
+    return () => { mounted = false; };
+  }, [isItem, itemId]);
+
   const crumbs = useMemo(() => {
     const base = [{ label: 'Inicio', to: '/' }];
 
@@ -36,25 +51,21 @@ export default function Breadcrumbs() {
     }
 
     if (isItem) {
-      const product = PRODUCTS.find(p => String(p.id) === String(itemId));
       const catSlug = product?.category;
       const catLabel = labelForCategory(catSlug);
-      const productLabel = product?.title || itemId;
+      const productLabel = loading ? 'Cargando…' : (product?.title || itemId);
 
-      return [
-        ...base,
-        { label: catLabel, to: catSlug ? `/category/${catSlug}` : null },
-        { label: productLabel, to: null, active: true },
-      ];
+      const arr = [...base];
+      if (catSlug) arr.push({ label: catLabel, to: `/category/${catSlug}` });
+      return [...arr, { label: productLabel, to: null, active: true }];
     }
 
     if (isDiscontinued) {
       return [...base, { label: 'Discontinuados', to: null, active: true }];
     }
 
-    return [...base, { label: 'Página', to: null, active: true }];
-  }, [isCategory, isItem, isDiscontinued, categoryId, itemId]);
-
+    return base;
+  }, [isCategory, isItem, isDiscontinued, categoryId, itemId, product, loading]);
 
   if (isHome) return null;
 
@@ -63,16 +74,14 @@ export default function Breadcrumbs() {
       <ol className="breadcrumb mb-0">
         {crumbs.map((c, idx) => {
           const isLast = idx === crumbs.length - 1;
-          if (isLast || c.active) {
-            return (
-              <li key={idx} className="breadcrumb-item active" aria-current="page">
-                {c.label}
-              </li>
-            );
-          }
+          const active = isLast || c.active;
           return (
-            <li key={idx} className="breadcrumb-item">
-              {c.to ? <Link to={c.to}>{c.label}</Link> : c.label}
+            <li
+              key={idx}
+              className={`breadcrumb-item ${active ? 'active' : ''}`}
+              aria-current={active ? 'page' : undefined}
+            >
+              {!active && c.to ? <Link to={c.to}>{c.label}</Link> : c.label}
             </li>
           );
         })}

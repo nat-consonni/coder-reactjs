@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import ShoppingCart from './ShoppingCart';
+import CartWidget from './CartWidget';
+
 
 const NavBar = () => {
   return (
@@ -93,17 +95,7 @@ const NavBar = () => {
         {/* Button group */}
         <div className="d-flex gap-sm-1 position-relative z-1">
           {/* Carrito */}
-          <button
-            type="button"
-            className="btn btn-icon fs-lg btn-outline-secondary border-0 rounded-circle me-2 button-cart"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#shoppingCart"
-            aria-controls="shoppingCart"
-            aria-label="Shopping cart"
-          >
-            <i className="bi bi-cart"></i>
-            <span id='cart-products-counter' className='cart-products-counter'>2</span>
-          </button>
+          <CartWidget className="me-2 button-cart" />
 
           {/* Buscador */}
           <div className="dropdown">

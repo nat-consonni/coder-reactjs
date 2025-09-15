@@ -1,14 +1,22 @@
 // src/index.js
 import React from 'react';
-import ReactDOM from 'react-dom/client'; // esto me salia un error, y decia que era que tengo la ultima version de React y que le faltaba eso
+import ReactDOM from 'react-dom/client';
 import App from './App';
+
+// Context del carrito
+import { CartProvider } from './context/CartContext';
+
+// Bootstrap + estilos
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'; 
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './styles/styles.scss';
 
-
-const root = ReactDOM.createRoot(document.getElementById('root')); // createRoot en lugar de render por el error de la version de React
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <App />,
+  <React.StrictMode>
+    <CartProvider>
+      <App />
+    </CartProvider>
+  </React.StrictMode>
 );

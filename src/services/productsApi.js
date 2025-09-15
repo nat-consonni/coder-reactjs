@@ -1,13 +1,18 @@
-import { PRODUCTS } from '../data/products';
-
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+import { db } from '../firebase/config';
+import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 
 export async function getProducts(categoryId) {
-  await delay(600);
-  return categoryId ? PRODUCTS.filter(p => p.category === categoryId) : PRODUCTS;
+  const col = collection(db, 'products');
+  const snap = categoryId
+    ? await getDocs(query(col, where('category', '==', categoryId)))
+    : await getDocs(col);
+
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
 export async function getProductById(id) {
-  await delay(500);
-  return PRODUCTS.find(p => String(p.id) === String(id)); 
+  const ref = doc(db, 'products', id);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...snap.data() };
 }
