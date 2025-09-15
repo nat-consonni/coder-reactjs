@@ -1,50 +1,69 @@
-//este lo hice con ayuda de ChatGPT
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Navigation, Controller } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 
-import { PRODUCTS } from '../data/products';
+import { getProducts } from '../services/productsApi';
 
 const formatUYU = (value) =>
   new Intl.NumberFormat('es-UY', { style: 'currency', currency: 'UYU', maximumFractionDigits: 0 }).format(value);
 
-export default function HeroCarousel({ categoryId, limit = 4, products, featuredOnly = true }) {
+
+const isFeatured = (v) => v === true || v === 'true' || v === 'ture';
+
+export default function HeroCarousel({
+  categoryId,
+  limit = 4,
+  featuredOnly = true,
+}) {
   const prevBtnRef = useRef(null);
   const nextBtnRef = useRef(null);
+
+  const [loading, setLoading] = useState(true);
+  const [rows, setRows] = useState([]); // productos crudos desde Firestore
 
   const [mainSwiper, setMainSwiper] = useState(null);
   const [prevSwiper, setPrevSwiper] = useState(null);
   const [nextSwiper, setNextSwiper] = useState(null);
   const [capSwiper,  setCapSwiper]  = useState(null);
 
-  //solo destacados
-  const isFeatured = (v) => v === true || v === 'true' || v === 'ture';
+  // Traer productos desde Firestore
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    getProducts(categoryId)
+      .then((data) => {
+        if (cancelled) return;
+        let base = Array.isArray(data) ? data : [];
+        let filtered = featuredOnly ? base.filter(p => isFeatured(p.destacado)) : base;
+        if (featuredOnly && filtered.length === 0) filtered = base; // fallback si no hay destacados
+        setRows(filtered.slice(0, limit));
+      })
+      .finally(() => !cancelled && setLoading(false));
 
+    return () => { cancelled = true; };
+  }, [categoryId, featuredOnly, limit]);
+
+  // Datos normalizados para el carrusel
   const items = useMemo(() => {
-    const src = Array.isArray(products) && products.length ? products : PRODUCTS;
-
-    let base = categoryId ? src.filter(p => p.category === categoryId) : src;
-    let filtered = featuredOnly ? base.filter(p => isFeatured(p.destacado)) : base;
-
-    // si no hay destacados, muestro base para no romper el carrusel
-    if (featuredOnly && filtered.length === 0) filtered = base;
-
-    return filtered.slice(0, limit).map(p => ({
+    return rows.map(p => ({
+      id: p.id,
       title: p.title,
-      subtitle: p.description,
-      price: formatUYU(p.price),
+      subtitle: p.description || '',
+      price: formatUYU(p.price ?? 0),
       image: p.img,
       thumb: p.img,
     }));
-  }, [products, categoryId, limit, featuredOnly]);
+  }, [rows]);
 
   const coverflow = useMemo(() => ({
     rotate: 0, scale: 1.3, depth: -200, stretch: -100, slideShadows: false
   }), []);
 
+  // Sincronizar previews (prev / next)
   const syncPreviews = useCallback((idx) => {
     if (!prevSwiper || !nextSwiper || !items.length) return;
     const n = items.length;
@@ -54,6 +73,7 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
     nextSwiper.slideToLoop(nextIndex, 0, false);
   }, [prevSwiper, nextSwiper, items.length]);
 
+  // Wire de navegación (prev / next) y controller con captions
   useEffect(() => {
     if (!mainSwiper) return;
 
@@ -76,9 +96,24 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
     return () => mainSwiper.off('slideChange', onChange);
   }, [mainSwiper, capSwiper, syncPreviews]);
 
+  // Re-sync si cambian sliders laterales
   useEffect(() => {
     if (mainSwiper) syncPreviews(mainSwiper.realIndex ?? 0);
   }, [prevSwiper, nextSwiper, mainSwiper, syncPreviews]);
+
+  if (loading) {
+    return (
+      <section className="bg-body-tertiary d-flex align-items-center" style={{ minHeight: 380 }}>
+        <div className="container py-5 text-center">
+          <div className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+            <div className="mt-3 placeholder col-8"></div>
+            <div className="mt-2 placeholder col-5"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!items.length) return null;
 
@@ -93,8 +128,8 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
         <div className="row align-items-center justify-content-center gx-3 gx-sm-4 mb-3 mb-sm-4">
           {/* Preview anterior */}
           <div className="col-lg-1 col-xl-2 d-none d-lg-flex justify-content-end">
-            <div className="position-relative user-select-none" style={{ width: 100 }}>
-              <div className="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-50 rounded-circle" />
+            <div className="position-relative user-select-none" style={{ width: 120 }}>
+              <div className="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-50 rounded-circle d-none-dark"></div>
               <Swiper
                 onSwiper={setPrevSwiper}
                 modules={[EffectCoverflow]}
@@ -107,7 +142,7 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
                 {items.map((it, i) => (
                   <SwiperSlide key={`prev-${i}`}>
                     <div className="ratio ratio-1x1">
-                      <img src={it.thumb} alt={it.title} className="w-100 h-100 object-fit-contain" />
+                      <img src={it.thumb} alt={it.title} className="w-100 h-100 object-fit-contain rounded-circle" />
                     </div>
                   </SwiperSlide>
                 ))}
@@ -138,7 +173,7 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
             >
               {items.map((it, i) => (
                 <SwiperSlide key={`main-${i}`}>
-                  <div className="rounded-circle ratio ratio-16x9">
+                  <div className="rounded-pill ratio" style={{ '--bs-aspect-ratio': 'calc(400 / 636 * 100%)' }}>
                     <img src={it.image} alt={it.title} className="w-100 h-100 object-fit-contain" />
                   </div>
                 </SwiperSlide>
@@ -157,8 +192,8 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
 
           {/* Preview siguiente */}
           <div className="col-lg-1 col-xl-2 order-lg-5 d-none d-lg-block">
-            <div className="position-relative user-select-none" style={{ width: 100 }}>
-              <div className="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-50 rounded-circle" />
+            <div className="position-relative user-select-none" style={{ width: 120 }}>
+              <div className="position-absolute top-0 start-0 w-100 h-100 bg-white opacity-50 rounded-circle d-none-dark"></div>
               <Swiper
                 onSwiper={setNextSwiper}
                 modules={[EffectCoverflow]}
@@ -171,7 +206,7 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
                 {items.map((it, i) => (
                   <SwiperSlide key={`next-${i}`}>
                     <div className="ratio ratio-1x1">
-                      <img src={it.thumb} alt={it.title} className="w-100 h-100 object-fit-contain" />
+                      <img src={it.thumb} alt={it.title} className="w-100 h-100 object-fit-contain rounded-circle" />
                     </div>
                   </SwiperSlide>
                 ))}
@@ -180,17 +215,17 @@ export default function HeroCarousel({ categoryId, limit = 4, products, featured
           </div>
         </div>
 
-        {/* Captions */}
-        <Swiper onSwiper={setCapSwiper} modules={[Controller]} allowTouchMove={false} loop className="swiper-fade">
+        {/* Captions sincronizados */}
+        <Swiper onSwiper={setCapSwiper} modules={[Controller]} allowTouchMove={false} loop>
           {items.map((it, i) => (
             <SwiperSlide key={`cap-${i}`}>
               <div className="text-center bg-body-tertiary py-3">
-                <h3 className="text-secondary-emphasis fs-base fw-normal mb-2">{it.title}</h3>
-                <p>{it.subtitle}</p>
+                <h3 className="text-secondary-emphasis fs-base fw-normal mb-1">{it.title}</h3>
+                {it.subtitle && <p className="mb-2">{it.subtitle}</p>}
                 <p className="h4 mb-4">{it.price}</p>
-                <a className="btn btn-sm btn-primary rounded-pill" href="#catalogo">
+                <Link className="btn btn-sm btn-primary rounded-pill" to={`/item/${items[i].id}`}>
                   Comprar <i className="bi bi-chevron-right ms-2" />
-                </a>
+                </Link>
               </div>
             </SwiperSlide>
           ))}
